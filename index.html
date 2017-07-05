@@ -6,6 +6,7 @@
     <title>intense</title>
     <link rel="stylesheet" href="lib/materialize/css/materialize.min.css">
     <link rel="stylesheet" href="lib/webui-popover-1.2.18/jquery.webui-popover.min.css">
+    <link rel="stylesheet" href="lib/materialize-colorpicker/css/materialize-colorpicker.min.css">
     <link rel="stylesheet" href="//cdn.materialdesignicons.com/1.9.32/css/materialdesignicons.min.css">
     <style>
         html {
@@ -50,15 +51,28 @@
             bottom: 10%;
             left: 0;
             margin: 0 auto;
-            text-align: center;
+            pointer-events: none;
         }
 
         #toast-container .toast {
             float: none!important;
-            display: inline-flex;
+            display: flex;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            justify-content: center;
         }
 
-        @media only screen and (min-width: 1201px) {
+        #file-drop {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            pointer-events: ;
+        }
+
+        @media only screen and (min-width: 601px) {
             .card.output {
                 position: fixed!important;
                 right: 20px!important;
@@ -74,8 +88,9 @@
 </head>
 
 <body>
+   <div id="file-drop"></div>
     <div class="row container">
-        <div class="card col xl5 s12 settings">
+        <div class="card col m6 s12 settings">
             <div class="card-title center">
                 Settings
             </div>
@@ -138,6 +153,7 @@
                                 </div>
                             </li>
 
+
                             <li>
                                 <div class="collapsible-header">
                                     <input type="checkbox" name="intense" id="intense">
@@ -150,12 +166,23 @@
                                         <label for="opt-intense-jiggle">Jiggle</label>
                                     </div>
 
+
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="collapsible-header">
+                                    <input type="checkbox" name="zoom" id="zoom">
+                                    <label for="zoom">Zoom</label>
+                                </div>
+                                <div class="collapsible-body">
                                     <div class="input-field">
-                                        <input type="number" id="opt-intense-zoom" name="opt-intense-zoom" min="1" max="10" step="0.1" value="1.1">
-                                        <label for="opt-intense-jiggle">Zoom</label>
+                                        <input type="number" id="opt-zoom-value" name="opt-zoom-value" min="0.7" max="10" step="0.1" value="1.1">
+                                        <label for="opt-zoom-value">Value</label>
                                     </div>
                                 </div>
                             </li>
+
                         </ul>
 
                     </div>
@@ -171,7 +198,15 @@
                                 </div>
 
                                 <div class="collapsible-body">
+                                    <div class="input-field">
+                                        <input id="opt-color-rgb" name="opt-color-rgb">
+                                        <label for="opt-color-rgb">Color</label>
+                                    </div>
 
+                                    <div class="input-field">
+                                        <input id="opt-color-opacity" name="opt-color-opacity">
+                                        <label for="opt-color-opacity">Opacity</label>
+                                    </div>
                                 </div>
                             </li>
                         </ul>
@@ -187,8 +222,9 @@
             </form>
         </div>
 
-        <div class="card col xl5 s12 offset-xl2 output">
+        <div class="card col m5 s12 offset-xl2 output">
             <div class="card-title center">Output</div>
+            <div id="load-container"></div>
             <img id="image">
         </div>
     </div>
@@ -200,8 +236,11 @@
     <script src="lib/NeuQuant.js"></script>
     <script src="lib/GIFEncoder.js"></script>
     <script src="lib/jquery-2.1.1.min.js"></script>
-    <script src="lib/webui-popover-1.2.18/jquery.webui-popover.min.js"></script>
     <script src="lib/materialize/js/materialize.min.js"></script>
+    <script src="lib/progressbar.js-1.0.1/progressbar.min.js"></script>
+    <script src="lib/jquery-ui/jquery-ui.min.js"></script>
+    <script src="lib/jquery-file-upload-9.18.0/js/jquery.fileupload.min.js"></script>
+    <script src="js/point-selector.js"></script>
     <script src="js/main.js"></script>
 
 </body>

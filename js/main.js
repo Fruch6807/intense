@@ -1,5 +1,3 @@
-//TODO: fix the fucking expandable and checkboxes
-
 $(document).ready(function () {
     $('.collapsible').collapsible({
         accordion: false,
@@ -9,6 +7,19 @@ $(document).ready(function () {
     $('.collapsible-header label').click((e) => e.preventDefault());
 
 
+
+    $('#file').fileupload({
+        pasteZone: $(document),
+        replaceFileInput: false,
+        fileInput: $('#file'),
+        autoUpload: false,
+        drop: function (e, data) {
+            setFile(data.files[0]);
+        },
+        paste: function (e, data) {
+            setFile(data.files[0]);
+        }
+    });
 });
 
 function serializeFormData($form) {
@@ -54,11 +65,12 @@ var context = canvas.getContext('2d');
 var file = document.getElementById('file');
 var imageObj = new Image();
 var form = document.getElementById('controls-form');
+var outputImage = document.getElementById('image');
 
-file.addEventListener('change', setFile);
+file.addEventListener('change', e => setFile(e.target.files[0]));
 
-function setFile(e) {
-    imageObj.src = URL.createObjectURL(e.target.files[0]);
+function setFile(file) {
+    imageObj.src = URL.createObjectURL(file);
     document.querySelector('.file-button-container img').src = imageObj.src;
 }
 
@@ -66,11 +78,13 @@ form.addEventListener('submit', e => {
     e.preventDefault();
 
     if (imageObj.src === '') {
-        Materialize.toast('Select an image!', 4000);
+        Materialize.toast('Select an image!', 3000);
         return;
     }
 
     var arg = serializeFormData($(form));
+
+    outputImage.src = '';
 
     process(arg);
 });
@@ -95,39 +109,64 @@ function rotate(iteration, frameNum, angle, ctx) {
 
 /**
  * INTENSE
- * @param {number}   zoom   [[Description]]
  * @param {number}   jiggle [[Description]]
  * @param {CanvasRenderingContext2D} ctx    [[Description]]
  */
-function intense(zoom, jiggle, ctx) {
-    ctx.translate(canvas.width / 2, canvas.height / 2);
-    ctx.scale(zoom, zoom);
-    ctx.translate(-canvas.width / 2, -canvas.height / 2);
+function intense(jiggle, ctx) {
     ctx.translate((Math.random() * 2 - 1) * jiggle, (Math.random() * 2 - 1) * jiggle);
 }
 
+
+function zoom(value, ctx) {
+    ctx.translate(canvas.width / 2, canvas.height / 2);
+    ctx.scale(value, value);
+    ctx.translate(-canvas.width / 2, -canvas.height / 2);
+}
+
 function process(arg) {
-    let frames = arg.frames;
+    var framesNum = arg.frames;
+    var frames = [];
+
+    var gifWorker = new Worker("/js/stoopid-worker.js");
+
+    var dataRegexp = /^data:image\/gif;base64,/;
+    var startTime, progressBar;
+    gifWorker.onmessage = function (event) {
+        if (dataRegexp.test(event.data)) {
+            outputImage.src = event.data;
+            gifWorker.terminate();
+
+            if (progressBar !== undefined) {
+                progressBar.destroy();
+            }
+        } else {
+            var status = JSON.parse(event.data, function (key, value) {
+                if (key == "currentTime") {
+                    return new Date(value);
+                } else {
+                    return value;
+                }
+            });
+
+            if ('startTime' in status) {
+                startTime = new Date(status.startTime);
+                progressBar = new ProgressBar.Circle('#load-container', {
+                    color: '#26A69A',
+                    strokeWidth: 6
+                });
+            } else if (status.processed % 5) {
+                var timeLeft = Math.round((status.currentTime - startTime) * (frames.length - status.processed) / status.processed / 1000);
+                progressBar.animate(Math.round(status.processed / frames.length * 100) / 100);
+                progressBar.setText(timeLeft);
+
+            }
+        }
+    };
 
     canvas.height = imageObj.height;
     canvas.width = imageObj.width;
 
-    var encoder = new GIFEncoder();
-    encoder.setQuality(arg.quality);
-    if (arg['no-loop']) {
-        encoder.setRepeat(arg['no-loop']['loop-repeat-count']);
-    } else {
-        encoder.setRepeat(0); //auto-loop
-    }
-
-    encoder.setDelay(arg.delay);
-
-    console.log(encoder.start());
-
-
-//    context.translate(canvas.width / 2, canvas.height / 2);
-
-    for (let iteration = 1; iteration <= frames; iteration++) {
+    for (let iteration = 1; iteration <= framesNum; iteration++) {
         context.save();
         context.setTransform(1, 0, 0, 1, 0, 0);
         context.fillStyle = "white";
@@ -136,63 +175,22 @@ function process(arg) {
 
         context.save();
         if (arg.intense) {
-            intense(arg.intense.zoom, arg.intense.jiggle, context);
+            intense(arg.intense.jiggle, context);
+        }
+        if (arg.zoom) {
+            zoom(arg.zoom.value, context);
         }
         if (arg.rotate) {
-            rotate(iteration, frames, Math.PI * 2, context);
+            rotate(iteration, framesNum, Math.PI * 2, context);
         }
         context.drawImage(imageObj, 0, 0);
-        console.log(encoder.addFrame(context));
+        frames.push(context.getImageData(0, 0, canvas.width, canvas.height));
         context.restore();
     }
 
-    encoder.finish();
-    document.getElementById('image').src = 'data:image/gif;base64,' + encode64(encoder.stream().getData())
+    gifWorker.postMessage({
+        size: [canvas.width, canvas.height],
+        frames: frames,
+        arg: arg
+    });
 }
-
-
-
-
-
-/*
-To add WebWorkers for animation rendering:
-
-
-var frame_index,
-    frame_length,
-    height,
-    width,
-    imageData; //get it from onmessage
-
-var encoder = new GIFEncoder(); //create a new GIFEncoder for every new job
-if(frame_index == 0){
-  encoder.start();
-}else{
-  encoder.setProperties(true, true); //started, firstFrame
-}
-encoder.setSize(height, width);
-encoder.addFrame(imageData, true);
-if(frame_length == frame_index){
-  encoder.finish()
-}
-postMessage(frame_index + encoder.stream().getData()) //on the page, search for the GIF89a to see the frame_index
-
-
-var animation_parts = new Array(frame_length);
-//on the handler side:
-
-var worker = new WebWorker('blahblahblah.js');
-worker.onmessage = function(e){
-  //handle stuff, like get the frame_index
-  animation_parts[frame_index] = frame_data;
-  //check when everything else is done and then do animation_parts.join('') and have fun
-}
-var imdata = context.getImageData(0,0,canvas.width,canvas.height)
-var len = canvas.width * canvas.height * 4;
-var imarray = [];
-for(var i = 0; i < len; i++){
-  imarray.push(imdata[i]);
-}
-
-worker.postMessage(frame_index + ';' + frame_length + ';' + canvas.height + ';' + canvas.width + ';' + imarray.join(','))
-*/
