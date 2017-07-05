@@ -132,7 +132,7 @@ function process(arg) {
   var framesNum = arg.frames;
   var frames = [];
 
-  var gifWorker = new Worker("/js/stoopid-worker.js");
+  var gifWorker = new Worker("./js/stoopid-worker.js");
 
   var dataRegexp = /^data:image\/gif;base64,/;
   var startTime, progressBar;
@@ -190,11 +190,14 @@ function process(arg) {
     }
     context.drawImage(imageObj, 0, 0);
 
-    context.save();
-    context.setTransform(1, 0, 0, 1, 0, 0);
-    context.fillStyle = arg.color.rgba;
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.restore();
+
+    if (arg.color) {
+      context.save();
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      context.fillStyle = arg.color.rgba;
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.restore();
+    }
 
     frames.push(context.getImageData(0, 0, canvas.width, canvas.height));
     context.restore();
