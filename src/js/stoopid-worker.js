@@ -3,6 +3,8 @@ importScripts("../lib/b64.js",
     "../lib/NeuQuant.js",
     "../lib/GIFEncoder.js");
 
+
+
 self.addEventListener("message", function (event) {
     var data = event.data;
     var arg = data.arg;

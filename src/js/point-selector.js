@@ -6,12 +6,15 @@
             if ($(this).parent().hasClass('image-point-selector-wrapper')) {
                 return;
             }
+            
             selectorsCount++;
             $.extend(options, {
                 name: 'image-point-selector-' + selectorsCount,
                 displayCoords: true,
                 src: ''
             });
+            
+            
         },
 
         getCoordinates: function (options) {

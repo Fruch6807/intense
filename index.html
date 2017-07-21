@@ -5,103 +5,11 @@
   <meta charset="UTF-8">
   <title>intense</title>
 
-  <link rel="icon" href="./favicon.ico">
+  <link rel="icon" href="dist/static/favicon.ico">
 
   <link rel="stylesheet" href="lib/materialize/css/materialize.min.css">
   <link rel="stylesheet" href="lib/jquery-ui/jquery-ui.min.css">
-  <link rel="stylesheet" href="//cdn.materialdesignicons.com/1.9.32/css/materialdesignicons.min.css">
-  <style>
-    html {
-      background-image: linear-gradient( 135deg, #79F1A4 0%, #0E5CAD 100%);
-      background-repeat: no-repeat;
-      min-height: 100%;
-    }
-
-    canvas {
-      visibility: hidden;
-    }
-
-    .card.settings {}
-
-    #file {
-      display: none;
-    }
-
-    #image {
-      max-width: 100%;
-      display: block;
-      margin: 0 auto;
-    }
-
-    .file-button-container {
-      margin-bottom: 3em;
-    }
-
-    .file-button-container img {
-      max-width: 100%;
-      display: block;
-      margin: 0 auto;
-    }
-
-    .collapsible {
-      width: 100%;
-    }
-
-    #toast-container {
-      top: auto !important;
-      right: 0 !important;
-      bottom: 10%;
-      left: 0;
-      margin: 0 auto;
-      pointer-events: none;
-    }
-
-    #toast-container .toast {
-      float: none!important;
-      display: flex;
-      max-width: 300px;
-      margin-left: auto;
-      margin-right: auto;
-      justify-content: center;
-    }
-
-    #file-drop {
-      position: absolute;
-      left: 0;
-      top: 0;
-      height: 100%;
-      width: 100%;
-      pointer-events: ;
-    }
-
-    #load-container {
-      width: 250px;
-      margin: 0 auto;
-    }
-
-    #opt-color-rgba {
-      margin-top: 5px;
-    }
-
-    .cp-app {
-      background-color: white!important;
-      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)
-    }
-
-    @media only screen and (min-width: 601px) {
-      .card.output {
-        position: fixed!important;
-        right: 20px!important;
-      }
-    }
-
-    @media only screen and (max-width: 600px) {
-      #toast-container {
-        bottom: 0;
-      }
-    }
-
-  </style>
+  <link rel="stylesheet" href="http://cdn.materialdesignicons.com/1.9.32/css/materialdesignicons.min.css">
 </head>
 
 <body>
@@ -111,7 +19,7 @@
       <div class="card-title center">
         Settings
       </div>
-      <form action="./" id="controls-form" class="card-content">
+      <form action="dist/static" id="controls-form" class="card-content">
         <input type="file" id="file">
         <div class="center file-button-container">
           <img>
@@ -131,6 +39,16 @@
             <div class="input-field">
               <label for="frames" data-error="Should be a positive number from 1 to 120">Frames</label>
               <input type="number" name="frames" id="frames" min="1" max="120" value="60" class="validate" required>
+            </div>
+
+            <div>
+              <div class="switch">
+                <label>
+                Preview
+                <input type="checkbox" id="switch-preview">
+                <span class="lever"></span>
+                </label>
+              </div>
             </div>
           </div>
 
@@ -235,14 +153,18 @@
     </div>
 
     <div class="card col m5 s12 offset-xl2 output">
+      <div id="bitmap-container" style="display: none">
+        <div class="card-title center">Preview</div>
+        <canvas id="bitmap"></canvas>
+      </div>
       <div class="card-title center">Output</div>
       <div id="load-container"></div>
       <img id="image">
     </div>
   </div>
 
+<!--
 
-  <canvas id="bitmap"></canvas>
   <script src="./b64.js"></script>
   <script src="lib/LZWEncoder.js"></script>
   <script src="lib/NeuQuant.js"></script>
@@ -252,16 +174,19 @@
   <script src="lib/progressbar.js-1.0.1/progressbar.min.js"></script>
   <script src="lib/jquery-ui/jquery-ui.min.js"></script>
   <script src="lib/jquery-file-upload-9.18.0/js/jquery.fileupload.min.js"></script>
-  <!--Color picker stuff start-->
+  &lt;!&ndash;Color picker stuff start&ndash;&gt;
   <script src="lib/colorPicker/colors.js"></script>
   <script src="lib/colorPicker/colorPicker.data.js"></script>
   <script src="lib/colorPicker/colorPicker.js"></script>
   <script src="lib/colorPicker/jQuery_implementation/jqColor.js"></script>
-  <!--    <script src="lib/colorPicker/jQuery_implementation/jQueryColorPicker.min.js"></script>-->
-  <!--Color picker stuff end  -->
+  &lt;!&ndash;    <script src="lib/colorPicker/jQuery_implementation/jQueryColorPicker.min.js"></script>&ndash;&gt;
+  &lt;!&ndash;Color picker stuff end  &ndash;&gt;
   <script src="lib/jquery-file-upload-9.18.0/js/jquery.fileupload.min.js"></script>
   <script src="js/point-selector.js"></script>
+  <script src="js/draw.js"></script>
   <script src="js/main.js"></script>
+-->
+  <script src="dist/app.js"></script>
 
 </body>
 
