@@ -41,6 +41,14 @@ module.exports = {
                 loader: 'babel-loader',
                 exclude: /node_modules/, query: {presets: ['es2015']}
             },
+            {
+                test: /\.(jpg|jpeg|gif|png)$/,
+                use: 'url-loader',
+            },
+            {
+                test: /\.(woff|woff2|eot|ttf|svg)$/,
+                use: 'url-loader',
+            }
         ],
     }
 };
