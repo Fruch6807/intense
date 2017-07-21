@@ -1,8 +1,14 @@
-import 'materialize-css/dist/css/materialize.min.css'
+import 'materialize-css/dist/css/materialize.css'
 import 'jquery-ui/themes/base/all.css'
+import 'colorjoe/css/colorjoe.css'
+import 'colorjoe/css/styles.css'
 import './../less/main.less';
 
-//import 'colorPicker';
+console.log('rerorero');
+
+// import 'colorPicker';
+import ProgressBar from 'progressbar.js';//TODO: FIX THIS CRAP
+import colorjoe from 'colorjoe';
 import 'blueimp-file-upload';
 import 'jquery-ui';
 import 'materialize-css';
@@ -30,9 +36,8 @@ $(document).ready(function () {
     });
 
 
-    //$('#opt-color-rgba').colorPicker({
-    //    noAlpha: false
-    //});
+    var color_test = colorjoe.rgb('COLOR_TEST', 'red', ['alpha']);
+    color_test.show();
 
     var preview = false;
     var previewTimer;

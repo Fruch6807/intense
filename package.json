@@ -9,16 +9,20 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Fruch6807",
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",
     "babel-preset-es2015": "^6.24.1",
     "css-loader": "^0.28.4",
+    "cssnano": "^3.10.0",
     "extract-text-webpack-plugin": "^3.0.0",
     "less": "^2.7.2",
     "less-loader": "^4.0.5",
+    "optimize-css-assets-webpack-plugin": "^2.0.0",
+    "purify-css": "^1.2.5",
+    "purifycss-webpack": "^0.7.0",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
     "webpack": "^3.3.0",
@@ -26,10 +30,13 @@
   },
   "dependencies": {
     "blueimp-file-upload": "https://github.com/blueimp/jQuery-File-Upload/tarball/v9.18.0",
-    "colorPicker": "github:PitPik/colorPicker#41d780c31fbe01d68e3c3e15e90d8d27d6935939",
+    "colorjoe": "github:bebraw/colorjoe#b1ac0cd151496cb4dc544bb91d6c062c282a22aa",
+    "compression-webpack-plugin": "^1.0.0",
+    "glob-all": "^3.1.0",
     "jquery": "3.2.1",
     "jquery-ui": "1.12.1",
     "materialize-css": "0.100.0",
-    "progressbar.js": "1.0.1"
+    "progressbar.js": "1.0.1",
+    "webpack-uglify-js-plugin": "^1.1.9"
   }
 }

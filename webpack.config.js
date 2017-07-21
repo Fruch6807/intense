@@ -1,13 +1,35 @@
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const PurifyCSSPlugin = require('purifycss-webpack');
+const CompressionPlugin = require("compression-webpack-plugin");
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const glob = require('glob-all');
 module.exports = {
     plugins: [
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
             "window.jQuery": "jquery",
-        })
+        }),
+        new CompressionPlugin({
+            asset: "[path].gz[query]",
+            algorithm: "gzip",
+            test: /\.js$|\.html$|\.css$/,
+            threshold: 10240,
+            minRatio: 0.8
+        }),
+        new ExtractTextPlugin('styles.css'),
+        // new PurifyCSSPlugin({
+        //     // Give paths to parse for rules. These should be absolute!
+        //     paths: glob.sync(path.join(__dirname, '/dist/static/*.html')),
+        // }),
+        new OptimizeCssAssetsPlugin({
+            assetNameRegExp: /styles.css$/g,
+            cssProcessor: require('cssnano'),
+            cssProcessorOptions: {discardComments: {removeAll: true}},
+            canPrint: true
+        }),
     ],
     context: path.resolve(__dirname, './src'),
     entry: {
@@ -23,18 +45,17 @@ module.exports = {
         rules: [
             {
                 test: /\.less$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                    'less-loader',
-                ]
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: ["css-loader", "less-loader"]
+                })
             },
             {
                 test: /\.css$/,
-                use: [
-                    'style-loader',
-                    'css-loader',
-                ]
+                use: ExtractTextPlugin.extract({
+                    fallback: "style-loader",
+                    use: "css-loader"
+                })
             },
             {
                 test: /\.js$/,

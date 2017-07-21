@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>intense</title>
+
+    <link rel="icon" href="favicon.ico">
+
+    <!--<link rel="stylesheet" href="../lib/materialize/css/materialize.min.css">-->
+    <!--<link rel="stylesheet" href="../lib/jquery-ui/jquery-ui.min.css">-->
+    <link rel="stylesheet" href="http://cdn.materialdesignicons.com/1.9.32/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+<div id="file-drop"></div>
+<div class="row container">
+    <div class="card col m6 s12 settings">
+        <div class="card-title center">
+            Settings
+        </div>
+        <form action="" id="controls-form" class="card-content">
+            <input type="file" id="file">
+            <div class="center file-button-container">
+                <img>
+                <label for="file" class="btn">Image</label></div>
+            <div>
+                <div>
+                    <div class="quality-container input-field">
+                        <label for="quality" data-error="Should be a positive number from 1 to 256">GIF quality</label>
+                        <input type="number" name="quality" id="quality" min="1" max="256" value="10" class="validate"
+                               required>
+                    </div>
+
+                    <div class="input-field">
+                        <label for="delay" data-error="Should be a positive number from 50 to 500">GIF delay</label>
+                        <input type="number" name="delay" id="delay" min="25" max="500" value="50" class="validate"
+                               required>
+                    </div>
+
+                    <div class="input-field">
+                        <label for="frames" data-error="Should be a positive number from 1 to 120">Frames</label>
+                        <input type="number" name="frames" id="frames" min="1" max="120" value="60" class="validate"
+                               required>
+                    </div>
+
+                    <div>
+                        <div class="switch">
+                            <label>
+                                Preview
+                                <input type="checkbox" id="switch-preview">
+                                <span class="lever"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-title center">Animation</div>
+
+                <div class="options-container">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header">
+                                <input type="checkbox" name="no-loop" id="no-loop">
+                                <label for="no-loop">Disable loop</label>
+                            </div>
+
+                            <div class="collapsible-body">
+                                <div class="input-field">
+                                    <input type="number" id="opt-no-loop-repeat-count" name="opt-no-loop-repeat-count"
+                                           value="1" min="1">
+                                    <label for="opt-no-loop-repeat-count">Repeat count</label>
+                                </div>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="collapsible-header">
+                                <input type="checkbox" name="rotate" id="rotate">
+                                <label for="rotate">Rotate</label>
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="collapsible-header">
+                                <input type="checkbox" name="translate" id="translate">
+                                <label for="translate">Translate</label>
+                            </div>
+
+                            <div class="collapsible-body">
+                                Not usible yet!
+                            </div>
+                        </li>
+
+
+                        <li>
+                            <div class="collapsible-header">
+                                <input type="checkbox" name="intense" id="intense">
+                                <label for="intense">Intense</label>
+                            </div>
+
+                            <div class="collapsible-body">
+                                <div class="input-field">
+                                    <input type="number" id="opt-intense-jiggle" name="opt-intense-jiggle" value="1"
+                                           min="0" max="10" step="1">
+                                    <label for="opt-intense-jiggle">Jiggle</label>
+                                </div>
+
+
+                            </div>
+                        </li>
+
+                        <li>
+                            <div class="collapsible-header">
+                                <input type="checkbox" name="zoom" id="zoom">
+                                <label for="zoom">Zoom</label>
+                            </div>
+                            <div class="collapsible-body">
+                                <div class="input-field">
+                                    <input type="number" id="opt-zoom-value" name="opt-zoom-value" min="0.7" max="10"
+                                           step="0.1" value="1.1">
+                                    <label for="opt-zoom-value">Value</label>
+                                </div>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </div>
+
+                <div class="card-title center">Effects</div>
+
+                <div class="options-container">
+                    <ul class="collapsible" data-collapsible="expandable">
+                        <li>
+                            <div class="collapsible-header">
+                                <input type="checkbox" name="color" id="color">
+                                <label for="color">Color</label>
+                            </div>
+
+                            <div class="collapsible-body">
+                                <div class="input-field">
+                                    <input type="text" id="opt-color-rgba" class="color" name="opt-color-rgba"
+                                           style="color: rgb(34, 34, 34); background-color: rgba(255, 0, 0, 0.36);"
+                                           value="rgba(255, 0, 0, 0.36)" readonly>
+                                    <label for="opt-color-rgba">Color</label>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+
+
+            </div>
+
+            <div class="center">
+                <input type="submit" class="btn" value="Render!">
+            </div>
+        </form>
+    </div>
+
+    <div class="card col m5 s12 offset-xl2 output">
+        <div id="COLOR_TEST"></div>
+        <div id="bitmap-container" style="display: none">
+            <div class="card-title center">Preview</div>
+            <canvas id="bitmap"></canvas>
+        </div>
+        <div class="card-title center">Output</div>
+        <div id="load-container"></div>
+        <img id="image">
+    </div>
+</div>
+
+<!--
+
+  <script src="./b64.js"></script>
+  <script src="lib/LZWEncoder.js"></script>
+  <script src="lib/NeuQuant.js"></script>
+  <script src="lib/GIFEncoder.js"></script>
+  <script src="lib/jquery-2.1.1.min.js"></script>
+  <script src="lib/materialize/js/materialize.min.js"></script>
+  <script src="lib/progressbar.js-1.0.1/progressbar.min.js"></script>
+  <script src="lib/jquery-ui/jquery-ui.min.js"></script>
+  <script src="lib/jquery-file-upload-9.18.0/js/jquery.fileupload.min.js"></script>
+  &lt;!&ndash;Color picker stuff start&ndash;&gt;
+  <script src="lib/colorPicker/colors.js"></script>
+  <script src="lib/colorPicker/colorPicker.data.js"></script>
+  <script src="lib/colorPicker/colorPicker.js"></script>
+  <script src="lib/colorPicker/jQuery_implementation/jqColor.js"></script>
+  &lt;!&ndash;    <script src="lib/colorPicker/jQuery_implementation/jQueryColorPicker.min.js"></script>&ndash;&gt;
+  &lt;!&ndash;Color picker stuff end  &ndash;&gt;
+  <script src="lib/jquery-file-upload-9.18.0/js/jquery.fileupload.min.js"></script>
+  <script src="js/point-selector.js"></script>
+  <script src="js/draw.js"></script>
+  <script src="js/main.js"></script>
+-->
+
+<script src="../app.js"></script>
+</body>
+
+</html>
