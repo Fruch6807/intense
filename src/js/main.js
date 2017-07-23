@@ -1,23 +1,39 @@
 import 'materialize-css/dist/css/materialize.css'
 import 'jquery-ui/themes/base/all.css'
 import 'colorjoe/css/colorjoe.css'
-import 'colorjoe/css/styles.css'
 import './../less/main.less';
 
-console.log('rerorero');
+// require('script-loader!legacy.js');
 
-// import 'colorPicker';
-import ProgressBar from 'progressbar.js';//TODO: FIX THIS CRAP
-import colorjoe from 'colorjoe';
+require('script-loader!colorPicker/colors.js');
+require('script-loader!colorPicker/colorPicker.data.js');
+require('script-loader!colorPicker/colorPicker.js');
+require('script-loader!colorPicker/javascript_implementation/jsColor');
+require('script-loader!colorPicker/javascript_implementation/jsColorPicker.min.js');
+
+import $ from 'jquery';
+import ProgressBar from 'progressbar.js';
 import 'blueimp-file-upload';
 import 'jquery-ui';
 import 'materialize-css';
 import draw from './draw.js';
+
+
+console.log('test');
+
 $(document).ready(function () {
     $('.collapsible').collapsible({
         accordion: false,
-        onOpen: (el) => $(el).find("input[type=checkbox]")[0].checked = true,
-        onClose: (el) => $(el).find("input[type=checkbox]")[0].checked = false
+        onOpen: (el) => {
+            var checkbox = $(el).find("input[type=checkbox]");
+            checkbox[0].checked = true;
+            checkbox.trigger('change');
+        },
+        onClose: (el) => {
+            var checkbox = $(el).find("input[type=checkbox]");
+            checkbox[0].checked = false;
+            checkbox.trigger('change');
+        }
     });
     $('.collapsible-header label').click((e) => e.preventDefault());
 
@@ -35,24 +51,59 @@ $(document).ready(function () {
         }
     });
 
+    var $colorPicker = $('#opt-color-rgba');
+    jsColorPicker('#opt-color-rgba', {
+        noAlpha: false,
+        actionCallback: function (e) {
+            $colorPicker.trigger('change');
+        }
+    });
 
-    var color_test = colorjoe.rgb('COLOR_TEST', 'red', ['alpha']);
-    color_test.show();
 
-    var preview = false;
-    var previewTimer;
-    $('#switch-preview').change(function () {
-        preview = !preview;
-        if (preview) {
+    var preview = {};
+    preview.isRunning = false;
+    preview.timer = null;
+
+    preview.stop = function () {
+        if (this.isRunning) {
             $('#bitmap-container').css('display', 'none');
-            clearInterval(previewTimer);
-        } else {
+            clearInterval(preview.timer);
+
+            this.isRunning = false;
+        }
+    };
+
+    preview.start = function () {
+        if (!this.isRunning) {
             $('#bitmap-container').css('display', 'block');
             var arg = serializeFormData($(form));
             var iteration = 0;
-            previewTimer = setInterval(() => draw(arg, iteration++, context, canvas, imageObj), arg.delay);
+            preview.timer = setInterval(() => {
+                    draw(arg, iteration++, context, canvas, imageObj)
+                }, arg.delay
+            );
+            this.isRunning = true;
         }
+    };
+
+    preview.toggle = function () {
+        if (preview.isRunning) {
+            preview.stop();
+        } else {
+            preview.start();
+        }
+    };
+
+    $('#switch-preview').change(function () {
+        preview.toggle();
     });
+
+    $('form').on('change', 'input', function () {
+        if (preview.isRunning && this.id != 'switch-preview') {
+            preview.stop();
+            preview.start();
+        }
+    })
 });
 
 
@@ -135,7 +186,7 @@ function validateFormData() {
 function process(arg) {
     var frames = [];
 
-    var gifWorker = new Worker("./dist/stoopid-worker.js");
+    var gifWorker = new Worker("./../stoopid-worker.js");
 
     var dataRegexp = /^data:image\/gif;base64,/;
     var startTime, progressBar;

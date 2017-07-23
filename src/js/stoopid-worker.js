@@ -1,7 +1,7 @@
-importScripts("../lib/b64.js",
-    "../lib/LZWEncoder.js",
-    "../lib/NeuQuant.js",
-    "../lib/GIFEncoder.js");
+importScripts("/static/lib/b64.js",
+    "/static/lib/LZWEncoder.js",
+    "/static/lib/NeuQuant.js",
+    "/static/lib/GIFEncoder.js");
 
 
 

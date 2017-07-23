@@ -34,7 +34,8 @@ module.exports = {
     context: path.resolve(__dirname, './src'),
     entry: {
         app: ['./js/main.js', './js/draw.js'],
-        "stoopid-worker": './js/stoopid-worker'
+        "stoopid-worker": './js/stoopid-worker',
+        // colorPicker: ['colorPicker/colors.js', 'colorPicker/colorPicker.data.js', 'colorPicker/colorPicker.js', 'colorPicker/javascript_implementation/jsColor', 'colorPicker/javascript_implementation/jsColorPicker.min.js'],
     },
     output: {
         path: path.resolve(__dirname, './dist'),

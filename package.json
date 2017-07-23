@@ -23,6 +23,7 @@
     "optimize-css-assets-webpack-plugin": "^2.0.0",
     "purify-css": "^1.2.5",
     "purifycss-webpack": "^0.7.0",
+    "script-loader": "^0.7.0",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
     "webpack": "^3.3.0",
@@ -30,12 +31,14 @@
   },
   "dependencies": {
     "blueimp-file-upload": "https://github.com/blueimp/jQuery-File-Upload/tarball/v9.18.0",
+    "colorPicker": "github:PitPik/colorPicker#41d780c31fbe01d68e3c3e15e90d8d27d6935939",
     "colorjoe": "github:bebraw/colorjoe#b1ac0cd151496cb4dc544bb91d6c062c282a22aa",
     "compression-webpack-plugin": "^1.0.0",
     "glob-all": "^3.1.0",
     "jquery": "3.2.1",
     "jquery-ui": "1.12.1",
     "materialize-css": "0.100.0",
+    "onecolor": "^3.0.4",
     "progressbar.js": "1.0.1",
     "webpack-uglify-js-plugin": "^1.1.9"
   }
