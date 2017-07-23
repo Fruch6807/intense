@@ -2,3 +2,4 @@
 node_modules/
 dist/*
 !dist/static
+!dist/index.html

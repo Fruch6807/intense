@@ -18,9 +18,6 @@ import 'jquery-ui';
 import 'materialize-css';
 import draw from './draw.js';
 
-
-console.log('test');
-
 $(document).ready(function () {
     $('.collapsible').collapsible({
         accordion: false,
